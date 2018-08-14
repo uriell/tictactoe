@@ -15,7 +15,7 @@ export default ({ width = 64, height = 64 }) => (
       cy="220"
       r="180"
       stroke="black"
-      stroke-width="82"
+      strokeWidth="82"
       fill="none"
     />
   </svg>

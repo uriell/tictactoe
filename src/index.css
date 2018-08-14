@@ -5,7 +5,29 @@ body {
 }
 
 .App {
-  display: flex;
+  display: grid;
   margin: 2em;
   justify-content: center;
+}
+
+button {
+  background-color: #e4e4e4;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+  color: #0c0c0c;
+  border: none;
+  outline: none;
+  padding: 10px 30px;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #eeeeee;
+}
+
+.avatar {
+  border-radius: 50%;
+  margin-right: 5px;
+  top: 10px;
+  position: relative;
 }
