@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-import * as firebase from "../firebase";
+import * as firebase from "./firebase";
 
 export const Private = ({
   children,

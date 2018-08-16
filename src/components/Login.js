@@ -1,7 +1,8 @@
 import React from "react";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
-import * as firebase from "../../firebase";
+import * as firebase from "../firebase";
+import "./Card.css";
 
 const uiConfig = {
   signInSuccessUrl: "/home",
@@ -13,5 +14,7 @@ const uiConfig = {
 };
 
 export default () => (
-  <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+  <div className="Card">
+    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+  </div>
 );

@@ -47,16 +47,19 @@ module.exports = db =>
           uid
         );
 
-        const winner = getWinner(gameData.rows);
+        const winner = getWinner(gameData);
 
         // eslint-disable-next-line
         return doc.ref
           .update(
-            {
-              winner,
-              rows: gameData.rows,
-              currentTurn: decideNextTurn(gameData)
-            },
+            Object.assign(
+              {},
+              {
+                rows: gameData.rows,
+                currentTurn: decideNextTurn(gameData, winner)
+              },
+              winner
+            ),
             { merge: true }
           )
           .then(() => winner);
@@ -64,12 +67,13 @@ module.exports = db =>
   });
 
 const decideShape = (game, uid) => (game.player1 === uid ? "x" : "o");
-const decideNextTurn = game => {
+const decideNextTurn = (game, winner) => {
+  if (winner.winner) return null;
   if (game.currentTurn === game.player1) return game.player2;
   return game.player1;
 };
 
-const getWinner = rows => {
+const getWinner = ({ rows, player1, player2 }) => {
   const checkPossibility = coords => {
     const [[x1, y1], [x2, y2], [x3, y3]] = coords;
     const one = rows[x1].columns[y1];
@@ -93,11 +97,17 @@ const getWinner = rows => {
     [[0, 2], [1, 1], [2, 0]]
   ];
 
-  const winner =
+  let winner =
     winningMatches
       .map(checkPossibility)
       .filter(match => match)
       .shift() || null;
+
+  if (winner === "x") {
+    winner = player1;
+  } else if (winner === "o") {
+    winner = player2;
+  }
 
   if (!winner) {
     const rowsWithEmptyColumns = rows.filter(

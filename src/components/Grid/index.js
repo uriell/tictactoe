@@ -1,7 +1,7 @@
 import React, { Fragment, Component } from "react";
 
 import "./index.css";
-import { Cross, Circle } from "../Shapes";
+import { Shapes } from "../";
 import * as firebase from "../../firebase";
 
 const CROSS = "x";
@@ -42,6 +42,7 @@ export default class Grid extends Component {
 
   performTurn(x, y) {
     if (this.state.currentTurn !== firebase.auth().currentUser.uid) return;
+    if (this.state.winner) return;
 
     const fn = firebase.functions().httpsCallable("performTurn");
     const { gameId } = this.props.match.params;
@@ -53,7 +54,13 @@ export default class Grid extends Component {
     const fn = firebase.functions().httpsCallable("joinGame");
     const { gameId } = this.props.match.params;
 
-    return fn({ gameId }).then(console.info);
+    this.setState({ joiningGame: true });
+
+    return fn({ gameId }).then(({ data }) => {
+      if (data.error) {
+        this.setState({ joinError: data.error });
+      }
+    });
   }
 
   get canJoin() {
@@ -73,63 +80,84 @@ export default class Grid extends Component {
     return this.state.winner === uid;
   }
 
+  get lost() {
+    const uid = firebase.auth().currentUser.uid;
+    return this.state.winner && this.state.winner !== uid;
+  }
+
   get waitingForPlayer() {
     return !this.state.player2;
   }
 
   render() {
-    const { rows, player1, player2 } = this.state;
+    const { joiningGame, draw, rows, player1, player2 } = this.state;
 
     return (
       <Fragment>
-        {this.canJoin ? (
-          <button onClick={() => this.joinGame()}>Join game</button>
-        ) : null}
-        <center>
-          <h2>
-            {this.waitingForPlayer ? (
-              "Aguardando outro jogador.."
-            ) : this.won ? (
-              "Você ganhou!"
-            ) : this.yourTurn ? (
-              <Fragment>
-                <img
-                  className="avatar"
-                  src={`https://api.adorable.io/avatars/32/${player1}.png`}
-                />
-                Sua vez
-              </Fragment>
-            ) : (
-              <Fragment>
-                <img
-                  className="avatar"
-                  src={`https://api.adorable.io/avatars/32/${player2}.png`}
-                />
-                Vez do adversário
-              </Fragment>
-            )}
-          </h2>
-        </center>
-        <br />
-        <div className="Grid">
-          {rows.map((row, x) => (
-            <div className="Grid Grid-Row" key={x}>
-              {row.columns.map((column, y) => (
-                <div
-                  className="Grid Grid-Column"
-                  onClick={() => this.performTurn(x, y)}
-                  key={y}
-                >
-                  {decideColumnContent(column)}
-                </div>
-              ))}
-            </div>
-          ))}
+        <div style={{ display: "grid" }}>
+          {this.canJoin ? (
+            <button onClick={() => this.joinGame()}>
+              {joiningGame ? "Entrando no jogo..." : "Entrar no jogo"}
+            </button>
+          ) : null}
+          <center>
+            <h2>
+              {this.waitingForPlayer ? (
+                "Aguardando outro jogador.."
+              ) : draw ? (
+                "Empatou!"
+              ) : this.won ? (
+                "Você ganhou!"
+              ) : this.lost ? (
+                "Você perdeu.."
+              ) : this.yourTurn ? (
+                <Fragment>
+                  <PlayerAvatar playerId={player1} />
+                  Sua vez
+                </Fragment>
+              ) : (
+                <Fragment>
+                  <PlayerAvatar playerId={player2} />
+                  Vez do adversário
+                </Fragment>
+              )}
+            </h2>
+          </center>
+          <br />
+          <div className="Grid">
+            {rows.map((row, x) => (
+              <div className="Grid Grid-Row" key={x}>
+                {row.columns.map((column, y) => (
+                  <div
+                    className="Grid Grid-Column"
+                    onClick={() => this.performTurn(x, y)}
+                    key={y}
+                  >
+                    {decideColumnContent(column)}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
       </Fragment>
     );
   }
 }
 
+const PlayerAvatar = ({ playerId }) => (
+  <img
+    alt="Player"
+    className="avatar"
+    src={`https://api.adorable.io/avatars/32/${playerId}.png`}
+  />
+);
+
 const decideColumnContent = column =>
-  column === CROSS ? <Cross /> : column === CIRCLE ? <Circle /> : "";
+  column === CROSS ? (
+    <Shapes.Cross />
+  ) : column === CIRCLE ? (
+    <Shapes.Circle />
+  ) : (
+    ""
+  );

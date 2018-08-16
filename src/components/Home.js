@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 
-import * as firebase from "../../firebase";
+import * as firebase from "../firebase";
 
 export default class Home extends Component {
   state = {
