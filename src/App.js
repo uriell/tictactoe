@@ -10,9 +10,9 @@ class App extends Component {
   state = { userLoaded: false };
 
   componentWillMount() {
-    firebase
-      .auth()
-      .onAuthStateChanged(() => this.setState({ userLoaded: true }));
+    return firebase
+      .getCurrentUser()
+      .then(currentUser => this.setState({ userLoaded: true, currentUser }));
   }
 
   render() {

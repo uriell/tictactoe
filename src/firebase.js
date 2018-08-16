@@ -16,3 +16,16 @@ firebase.initializeApp({
 export const auth = firebase.auth;
 export const functions = firebase.functions;
 export const firestore = firebase.firestore;
+
+let currentUser;
+export const getCurrentUser = () =>
+  currentUser
+    ? Promise.resolve(currentUser)
+    : new Promise(resolve =>
+        firebase.auth().onAuthStateChanged(user => {
+          currentUser = user;
+          resolve(currentUser);
+        })
+      );
+
+export { currentUser };
