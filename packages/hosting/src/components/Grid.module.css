@@ -1,0 +1,31 @@
+.Grid {
+  display: block;
+}
+
+.GridRow {
+  display: flex;
+  flex-flow: row;
+  min-width: 128px;
+  min-height: 128px;
+  border-bottom: 3px solid white;
+}
+
+.GridRow:last-child,
+.GridColumn:last-child {
+  border: none;
+}
+
+.GridColumn {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 128px;
+  min-height: 128px;
+  border-right: 3px solid white;
+  cursor: pointer;
+}
+
+.GridColumn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
