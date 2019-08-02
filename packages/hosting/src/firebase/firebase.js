@@ -3,6 +3,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/functions";
 import "firebase/firestore";
+import "firebase/performance";
 
 firebase.initializeApp({
   apiKey: "AIzaSyAs9OcwhWmmOj7Zsl4UhyYGB9oQ5J7EIow",
@@ -17,6 +18,7 @@ firebase.initializeApp({
 class Firebase {
   constructor(firebaseApp) {
     this.app = firebaseApp;
+    this.perf = firebaseApp.performance();
   }
 
   get auth() {
