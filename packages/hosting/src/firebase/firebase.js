@@ -10,7 +10,8 @@ firebase.initializeApp({
   databaseURL: "https://dito-tictactoe.firebaseio.com",
   projectId: "dito-tictactoe",
   storageBucket: "dito-tictactoe.appspot.com",
-  messagingSenderId: "207073192140"
+  messagingSenderId: "207073192140",
+  appId: "1:207073192140:web:4a62256e5990de6f"
 });
 
 class Firebase {
