@@ -2,13 +2,18 @@
   "name": "tictactoe",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "firebase-tools": "6.10.0",
-    "lerna": "3.14.1"
-  },
+  "dependencies": {},
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
-    "deploy": "firebase deploy"
+    "deploy": "firebase deploy",
+    "firebase": "firebase"
+  },
+  "engines": {
+    "node": "10"
+  },
+  "devDependencies": {
+    "firebase-tools": "8.2.0",
+    "lerna": "3.20.2"
   }
 }
